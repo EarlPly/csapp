@@ -376,7 +376,6 @@ if (empty($_SESSION['csrf_token'])) {
                                 <li>Largest cluster: ${labels[data.indexOf(Math.max(...data))]} with ${Math.max(...data).toLocaleString()} customers</li>
                                 ${results.length > 0 && results[0].min_age && results[0].max_age ? `<li>Age ranges vary across clusters, providing demographic differentiation</li>` : ''}
                                 <li>Each cluster represents a unique customer profile for targeted campaigns</li>
-                                <li><em>Note: Run the Python clustering script to generate enhanced cluster analysis with detailed explanations</em></li>
                             </ul>`;
                         }
                         break;
