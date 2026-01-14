@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
     switch ($segmentationType) {
         case 'gender':
-            $sql = "SELECT gender, COUNT(*) AS total_customers, ROUND(AVG(income), 2) AS avg_income, ROUND(AVG(purchase_amount), 2) AS avg_purchase_amount FROM customers GROUP BY gender";
+            $sql = "SELECT sr.cluster_label, COUNT(*) AS total_customers, ROUND(AVG(c.income), 2) AS avg_income, ROUND(AVG(c.purchase_amount), 2) AS avg_purchase_amount, MIN(c.age) AS min_age, MAX(c.age) AS max_age, CASE WHEN SUM(CASE WHEN c.gender = 'Male' THEN 1 ELSE 0 END) >= SUM(CASE WHEN c.gender = 'Female' THEN 1 ELSE 0 END) THEN 'Male' ELSE 'Female' END AS dominant_gender FROM segmentation_results sr JOIN customers c ON sr.customer_id = c.customer_id GROUP BY sr.cluster_label ORDER BY sr.cluster_label;";
             break;
 
         case 'region':
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
 
         case 'age_group':
-            $sql = "SELECT CASE WHEN age BETWEEN 18 AND 25 THEN '18-25' WHEN age BETWEEN 26 AND 40 THEN '26-40' WHEN age BETWEEN 41 AND 60 THEN '41-60' ELSE '61+' END AS age_group, COUNT(*) AS total_customers, ROUND(AVG(income), 2) AS avg_income, ROUND(AVG(purchase_amount), 2) AS avg_purchase_amount FROM customers GROUP BY age_group ORDER BY age_group";
+            $sql = "SELECT CASE WHEN age BETWEEN 0 AND 17 THEN '0-17' WHEN age BETWEEN 18 AND 25 THEN '18-25' WHEN age BETWEEN 26 AND 35 THEN '26-35' WHEN age BETWEEN 36 AND 50 THEN '36-50' WHEN age BETWEEN 51 AND 65 THEN '51-65' ELSE '66+' END AS age_group, COUNT(*) AS total_customers, ROUND(AVG(income), 2) AS avg_income, ROUND(AVG(purchase_amount), 2) AS avg_purchase_amount, MIN(purchase_amount) AS min_purchase_amount, MAX(purchase_amount) AS max_purchase_amount FROM customers GROUP BY age_group ORDER BY age_group";
             break;
 
         case 'income_bracket':
